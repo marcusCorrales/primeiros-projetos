@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle Financeiro</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #saldo {
+      text-align: center;
+      font-size: 1.5em;
+      margin: 15px 0;
+      padding: 10px;
+      background: #ecf0f1;
+      border-radius: 10px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input, select, button {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2980b9;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 8px;
+    }
+
+    .receita {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .despesa {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+
+  </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h2> Controle Financeiro</h2>
+            <div id="saldo">Saldo: R$ 0,00</div>
+
+            <form id="form">
+                <input type="text" id="descrição" placeholder="Descrição" required>
+                <input type="number" id="valor" placeholder="Valor" step="0.01" required>
+                <select id="tipo">
+                    <option value="receita">receita</option>
+                    <option value="despesa">Despesas</option>
+                </select>
+                <button type="submit">Adicionar</button>
+            </form>
+            <ul id="lista"></ul>
+        </div>
+
+
+        <script>
+            const forme = document.getElementById('form');
+            const lista = document.getElementById('lista')
+            const saldoEl = document.getElementById('saldo');
+            let saldo = 0;
+
+            form.addEventListener(submit, function(e)  {
+                e.preent.Default();
+                const descrição = document.getElementById('desrição').value;
+                const valor = parseFloat(document.getElementById('valor').value);
+                const tipo = document.getElementById('tipo').value;
+
+                if (tipo === "receita") {
+        saldo += valor;
+      } else {
+        saldo -= valor;
+      }
+
+      atualizarSaldo();
+
+      const li = document.createElement('li');
+      li.classList.add(tipo);
+      li.innerHTML = `${descricao} - R$ ${valor.toFixed(2)} 
+        <button onclick="remover(this, '${tipo}', ${valor})">❌</button>`;
+      lista.appendChild(li);
+
+      form.reset();
+    });
+
+    function atualizarSaldo() {
+      saldoEl.innerText = `Saldo: R$ ${saldo.toFixed(2)}`;
+    }
+
+    function remover(botao, tipo, valor) {
+      botao.parentElement.remove();
+      if (tipo === "receita") {
+        saldo -= valor;
+      } else {
+        saldo += valor;
+      }
+      atualizarSaldo();
+    }
+            
+        </script>
+    </body>
+</html>
