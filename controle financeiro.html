@@ -1,159 +1,248 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Controle Financeiro</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Controle Financeiro Pessoal</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
     body {
-        font-family: Arial, sans-serif;
-        background: #f4f4f4;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        min-height: 100vh;
+      background: #f0f2f5;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #007bff;
     }
 
     .container {
-        background: #fff;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        width: 400px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    #saldo {
-      text-align: center;
-      font-size: 1.5em;
-      margin: 15px 0;
-      padding: 10px;
-      background: #ecf0f1;
-      border-radius: 10px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 25px;
+      max-width: 800px;
+      width: 100%;
     }
 
     form {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 10px;
+      justify-content: space-between;
       margin-bottom: 20px;
     }
 
     input, select, button {
       padding: 10px;
-      font-size: 1em;
       border-radius: 8px;
       border: 1px solid #ccc;
+      flex: 1;
+      min-width: 150px;
     }
 
     button {
-      background: #3498db;
-      color: white;
+      background: #007bff;
+      color: #fff;
       border: none;
       cursor: pointer;
+      transition: 0.3s;
     }
 
     button:hover {
-      background: #2980b9;
+      background: #0056b3;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    li {
+    .summary {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .summary div {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      flex: 1;
+      margin: 5px;
+    }
+
+    .summary span {
+      display: block;
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
       padding: 10px;
-      margin-bottom: 5px;
-      border-radius: 8px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
     }
 
-    .receita {
-      background: #d4edda;
-      color: #155724;
+    th {
+      background: #007bff;
+      color: white;
     }
 
-    .despesa {
-      background: #f8d7da;
-      color: #721c24;
+    #chartContainer {
+      margin-top: 30px;
+      text-align: center;
     }
 
-
-  </style>
-    </head>
-
-    <body>
-        <div class="container">
-            <h2> Controle Financeiro</h2>
-            <div id="saldo">Saldo: R$ 0,00</div>
-
-            <form id="form">
-                <input type="text" id="descrição" placeholder="Descrição" required>
-                <input type="number" id="valor" placeholder="Valor" step="0.01" required>
-                <select id="tipo">
-                    <option value="receita">receita</option>
-                    <option value="despesa">Despesas</option>
-                </select>
-                <button type="submit">Adicionar</button>
-            </form>
-            <ul id="lista"></ul>
-        </div>
-
-
-        <script>
-            const forme = document.getElementById('form');
-            const lista = document.getElementById('lista')
-            const saldoEl = document.getElementById('saldo');
-            let saldo = 0;
-
-            form.addEventListener(submit, function(e)  {
-                e.preent.Default();
-                const descrição = document.getElementById('desrição').value;
-                const valor = parseFloat(document.getElementById('valor').value);
-                const tipo = document.getElementById('tipo').value;
-
-                if (tipo === "receita") {
-        saldo += valor;
-      } else {
-        saldo -= valor;
+    @media (max-width: 600px) {
+      .summary {
+        flex-direction: column;
       }
+    }
+  </style>
+</head>
+<body>
+  <h1>💰 Controle Financeiro</h1>
 
-      atualizarSaldo();
+  <div class="container">
+    <form id="formTransacao">
+      <input type="text" id="descricao" placeholder="Descrição" required />
+      <input type="number" id="valor" placeholder="Valor (R$)" required />
+      <select id="tipo">
+        <option value="receita">Receita</option>
+        <option value="despesa">Despesa</option>
+      </select>
+      <select id="categoria">
+        <option value="Salário">Salário</option>
+        <option value="Alimentação">Alimentação</option>
+        <option value="Transporte">Transporte</option>
+        <option value="Lazer">Lazer</option>
+        <option value="Outros">Outros</option>
+      </select>
+      <button type="submit">Adicionar</button>
+    </form>
 
-      const li = document.createElement('li');
-      li.classList.add(tipo);
-      li.innerHTML = `${descricao} - R$ ${valor.toFixed(2)} 
-        <button onclick="remover(this, '${tipo}', ${valor})">❌</button>`;
-      lista.appendChild(li);
+    <div class="summary">
+      <div>
+        Entradas
+        <span id="totalReceitas">R$ 0,00</span>
+      </div>
+      <div>
+        Saídas
+        <span id="totalDespesas">R$ 0,00</span>
+      </div>
+      <div>
+        Saldo
+        <span id="saldo">R$ 0,00</span>
+      </div>
+    </div>
 
+    <table>
+      <thead>
+        <tr>
+          <th>Descrição</th>
+          <th>Categoria</th>
+          <th>Tipo</th>
+          <th>Valor (R$)</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaTransacoes"></tbody>
+    </table>
+
+    <div id="chartContainer">
+      <canvas id="graficoDespesas" width="300" height="300"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("formTransacao");
+    const tabela = document.getElementById("tabelaTransacoes");
+    const totalReceitas = document.getElementById("totalReceitas");
+    const totalDespesas = document.getElementById("totalDespesas");
+    const saldo = document.getElementById("saldo");
+
+    let transacoes = [];
+    let chart;
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const descricao = document.getElementById("descricao").value;
+      const valor = parseFloat(document.getElementById("valor").value);
+      const tipo = document.getElementById("tipo").value;
+      const categoria = document.getElementById("categoria").value;
+
+      transacoes.push({ descricao, valor, tipo, categoria });
       form.reset();
+      atualizar();
     });
 
-    function atualizarSaldo() {
-      saldoEl.innerText = `Saldo: R$ ${saldo.toFixed(2)}`;
+    function atualizar() {
+      tabela.innerHTML = "";
+      let receitas = 0, despesas = 0;
+      let categorias = {};
+
+      transacoes.forEach(t => {
+        const linha = document.createElement("tr");
+        linha.innerHTML = `
+          <td>${t.descricao}</td>
+          <td>${t.categoria}</td>
+          <td>${t.tipo}</td>
+          <td>${t.valor.toFixed(2)}</td>
+        `;
+        tabela.appendChild(linha);
+
+        if (t.tipo === "receita") receitas += t.valor;
+        else {
+          despesas += t.valor;
+          categorias[t.categoria] = (categorias[t.categoria] || 0) + t.valor;
+        }
+      });
+
+      totalReceitas.textContent = `R$ ${receitas.toFixed(2)}`;
+      totalDespesas.textContent = `R$ ${despesas.toFixed(2)}`;
+      saldo.textContent = `R$ ${(receitas - despesas).toFixed(2)}`;
+
+      atualizarGrafico(categorias);
     }
 
-    function remover(botao, tipo, valor) {
-      botao.parentElement.remove();
-      if (tipo === "receita") {
-        saldo -= valor;
-      } else {
-        saldo += valor;
-      }
-      atualizarSaldo();
+    function atualizarGrafico(categorias) {
+      const ctx = document.getElementById("graficoDespesas").getContext("2d");
+      if (chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: Object.keys(categorias),
+          datasets: [{
+            data: Object.values(categorias),
+            backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0", "#9966ff"],
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: "Gastos por Categoria"
+            }
+          }
+        }
+      });
     }
-            
-        </script>
-    </body>
+  </script>
+</body>
 </html>
