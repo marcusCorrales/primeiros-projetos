@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Para o amor da minha vida ❤️</title>
+
+        <style>
+            body{
+                margin: 0;
+                font-family: 'Segoe UI', sans-serif;
+                background: linear-gradient(135deg,#ff758c,#ff7eb3);
+                color:white;
+                text-align:center;
+            }
+
+            .container{
+                padding:40px;
+            }
+
+            h1{
+                font-size:45px;
+            }
+            .mensagem{font-size:22px;
+    max-width:800px;
+    margin:auto;
+    margin-top:20px;
+}
+
+.galeria{
+    margin-top:40px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.galeria img{
+    width:250px;
+    height:250px;
+    object-fit:cover;
+    border-radius:15px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.3);
+    transition:0.3s;
+}
+
+.galeria img:hover{
+    transform:scale(1.08);
+}
+
+.declaracoes{
+    margin-top:50px;
+}
+
+.card{
+    background:rgba(255,255,255,0.2);
+    padding:20px;
+    border-radius:15px;
+    margin:15px auto;
+    max-width:600px;
+}
+
+footer{
+    margin-top:50px;
+    font-size:18px;
+}
+
+.heart{
+    position:fixed;
+    top:-10px;
+    color:white;
+    animation:fall linear forwards;
+}
+
+@keyframes fall{
+    to{
+        transform:translateY(100vh);
+    }
+}
+
+        </style>
+    </head>
+   <body>
+
+<div class="container">
+
+<h1>Feliz Dia da Mulher ❤️</h1>
+
+<p class="mensagem">
+Hoje é o Dia da Mulher, mas na verdade todos os dias deveriam ser seus.  
+Você é a pessoa que ilumina minha vida, me apoia em todos os momentos bons ou ruins, minha parceira de todos os dias, minha copilota de viagens e na vida.    
+Essa página é só uma pequena forma de mostrar o quanto eu te amo.
+</p>
+
+<div class="galeria">
+
+<img src="IMG_20251012_130657.jpg">
+<img src="IMG_20260101_214015.jpg">
+<img src="IMG_20260101_232049.jpg">
+<img src="IMG_20260301_133130.jpg">
+
+<img src="IMG_20260301_133142.jpg">
+
+</div>
+
+<div class="declaracoes">
+
+<div class="card">
+❤️ No inicio não foi facil, nós brigamos, erramos, outras pessoas tentaram nos distanciar.
+</div>
+
+<div class="card">
+❤️ mas nós superamos os obstaculos e passamos por tudo juntos.
+</div>
+
+<div class="card">
+❤️ Você mudou seus mals hábitos, e eu mudei os meus, e tenho muito orgulho disso todos os dias.
+</div>
+
+<div class="card">
+❤️ Eu te amo mais do que qualquer palavra poderia explicar.
+</div>
+
+<div class="card">
+❤️ Esteja ao meu lado que eu sempre estarei ao seu
+</div>
+
+</div>
+
+<footer>
+Com todo o amor, do seu Gatinho ❤️
+</footer>
+
+</div>
+
+<script>
+
+function criarCoracao(){
+
+    const heart = document.createElement("div")
+    heart.classList.add("heart")
+    heart.innerHTML="❤️"
+
+    heart.style.left=Math.random()*100+"vw"
+    heart.style.animationDuration=(Math.random()*3+2)+"s"
+    heart.style.fontSize=(Math.random()*20+20)+"px"
+
+    document.body.appendChild(heart)
+
+    setTimeout(()=>{
+        heart.remove()
+    },5000)
+
+}
+
+setInterval(criarCoracao,300)
+
+</script>
+
+</body>
+</html> 
